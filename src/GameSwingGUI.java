@@ -64,13 +64,13 @@ public class GameSwingGUI extends Thread {
                 }
             } while (result_name == null || result_name.equals(""));
             gamer = result_name;
-
+            guiInterface.setNameGamer(gamer);
 
             GameMain(randwhoWalksFirst(guiInterface), guiInterface, fieldSize);
             }
 
 
-        public String randwhoWalksFirst(GuiInterface guiInterface) {
+        private String randwhoWalksFirst(GuiInterface guiInterface) {
 
             Random r = new Random();
             String whoWalksFirst;
@@ -91,7 +91,7 @@ public class GameSwingGUI extends Thread {
 
 
 
-        void GameMain(String whoWalksFirst, GuiInterface guiInterface, int fieldSize) {
+        private void GameMain(String whoWalksFirst, GuiInterface guiInterface, int fieldSize) {
             //System.out.println(Thread.currentThread().getName());
             EndGameChek endGameChek = new EndGameChek();
             CoursemainGui coursemainGui = new CoursemainGui();
@@ -134,7 +134,7 @@ public class GameSwingGUI extends Thread {
                 coursemainGui.endofgame(course, gamer, endGameChek.getWinner(), fieldSize, guiInterface);
             }
 
-            System.out.println(Thread.currentThread().getName()); // jghjhgjghj
+           // System.out.println(Thread.currentThread().getName()); // jghjhgjghj
 
         }
 

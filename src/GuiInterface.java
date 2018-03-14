@@ -76,51 +76,66 @@ public class GuiInterface extends JFrame {
         file.add(repeat);
         file.addSeparator();
         file.add(exit);
+        file.setMnemonic('F');
+        //file.setAccelerator(KeyStroke.getKeyStroke('F', KeyEvent.CTRL_DOWN_MASK));
         minimize.addActionListener(e -> {
             //JOptionPane.showMessageDialog(getContentPane(), "Свернуть!", "Главное Меню", JOptionPane.DEFAULT_OPTION);
             setState(JFrame.ICONIFIED);
 
         });
-
+        minimize.setMnemonic('M');
+        minimize.setAccelerator(KeyStroke.getKeyStroke('M', KeyEvent.CTRL_DOWN_MASK));
         repeat.addActionListener(e -> {
-            //JOptionPane.showMessageDialog(getContentPane(), "Начать заново!", "Главное Меню", JOptionPane.PLAIN_MESSAGE);
-            File file_e = new File("C:\\Users\\manapov-ay\\Desktop\\Крестики-Нолики\\empty_11_150.jpg");
-            Image image = null;
-            try {
-                image = ImageIO.read(file_e);
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-            Icon icon = new ImageIcon(Objects.requireNonNull(image));
-
-            for (int i = 1; i < (int) (Math.pow(FieldSize, 2) + 1); i++) {
-                buttons[i].setEnabled(true);
-                buttons[i].setIcon(icon);
-                for( ActionListener al : buttons[i].getActionListeners() ) {
-                    buttons[i].removeActionListener(al);
+            Object[] options = {"Да", "Нет!"};
+            int rc = JOptionPane.showOptionDialog(
+                    getContentPane(), "Вы действительно хотите начать игру заново?",
+                    "Подтверждение", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null, options, options[0]);
+            if (rc == 0) {
+                File file_e = new File("C:\\Users\\manapov-ay\\Desktop\\Крестики-Нолики\\empty_11_150.jpg");
+                Image image = null;
+                try {
+                    image = ImageIO.read(file_e);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
                 }
-                buttons[i].addActionListener(new Push());
+                Icon icon = new ImageIcon(Objects.requireNonNull(image));
+
+                for (int i = 1; i < (int) (Math.pow(FieldSize, 2) + 1); i++) {
+                    buttons[i].setEnabled(true);
+                    buttons[i].setIcon(icon);
+                    for (ActionListener al : buttons[i].getActionListeners()) {
+                        buttons[i].removeActionListener(al);
+                    }
+                    buttons[i].addActionListener(new Push());
+
+                }
+
+
+                selectedNumber = "-1";
+
+                if (threads.size() > 0) threads.get(threads.size() - 1).interrupt();
+                System.out.println("Начало новой игры");
+                //System.out.println("GUI " + Thread.currentThread().getName() + " " + Thread.currentThread().getId());
+                //gameSwingGUI.GameMain(gameSwingGUI.randwhoWalksFirst());
+                GameSwingGUI gameSwingGUI = new GameSwingGUI(this, this.FieldSize, this.Namegamer);
+                threads.add(new Thread(gameSwingGUI));
+                threads.get(threads.size() - 1).start();
+
+                for (Thread thread1 : threads) {
+                    System.out.println(thread1.getName() + " " + thread1.getState());
+                }
 
             }
-
-            selectedNumber = "-1";
-
-            if (threads.size() > 0) threads.get(threads.size()-1).interrupt();
-            System.out.println("Начало новой игры");
-            System.out.println("GUI " + Thread.currentThread().getName() + " " + Thread.currentThread().getId());
-            //gameSwingGUI.GameMain(gameSwingGUI.randwhoWalksFirst());
-            GameSwingGUI gameSwingGUI = new GameSwingGUI(this, this.FieldSize, this.Namegamer);
-            threads.add(new Thread(gameSwingGUI));
-            threads.get(threads.size()-1).start();
-
-            for (Thread thread1 : threads) {
-                System.out.println(thread1.getName() + " " + thread1.getState());
-            }
-
-
 
         });
+        repeat.setMnemonic('R');
+        repeat.setAccelerator(KeyStroke.getKeyStroke('R', KeyEvent.CTRL_DOWN_MASK));
+
         exit.addActionListener(e -> closeFrame());
+        exit.setMnemonic('E');
+        exit.setAccelerator(KeyStroke.getKeyStroke('E', KeyEvent.CTRL_DOWN_MASK));
         return file;
     }
 

@@ -23,7 +23,7 @@ public class CoursemainGui {
                 }
             }
             if (guiInterface.returnNumber().equals("-1")) {
-                System.out.println("mainCourseGamer прерван");
+                //System.out.println("mainCourseGamer прерван");
                 break;
             }
 
@@ -42,11 +42,11 @@ public class CoursemainGui {
         guiInterface.setjLabelText("Ходит: компьютер. Ход: " + course);
         do {
             if (course < 3) {
-                System.out.println("paintGUI.specialClassPaint 1");
+                //System.out.println("paintGUI.specialClassPaint 1");
                     repeat = paintGUI.specialClassPaint(matrix, ai.initLogic(matrix, course, WinCombination), WhoWalksFirst, course, gamer, guiInterface);
                 }
             if (course > 2) {
-                System.out.println("paintGUI.specialClassPaint 2");
+                //System.out.println("paintGUI.specialClassPaint 2");
                     repeat = paintGUI.specialClassPaint(matrix, ai.initLogicMain(matrix, course, WinCombination), WhoWalksFirst, course, gamer, guiInterface);
                 }
         } while (repeat);

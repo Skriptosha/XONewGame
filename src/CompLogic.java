@@ -7,6 +7,7 @@ public abstract class CompLogic implements Runnable {
     private static String[][] matrix_temp;
     SearchMatrix sm_player = new SearchMatrix();
     SearchMatrix sm_ai = new SearchMatrix();
+    SearchMatrix sm_temp = new SearchMatrix();
     private static String previous_course = "";
     static ArrayList<String> ai_pair1;
     static ArrayList<String> ai_pair2;
@@ -53,8 +54,8 @@ public abstract class CompLogic implements Runnable {
         int c = matrix.length;
         System.out.println("Main.course " + course);
         if (course > 2) {
-            System.out.println(Arrays.deepToString(matrix));
-            System.out.println(WinCombination);
+            //System.out.println(Arrays.deepToString(matrix));
+            //System.out.println(WinCombination);
             if (searchLine.searchGorizontal(matrix, "O", WinCombination) == c - 1 && !searchLine.getCoordinate().equals("")) {
                 ret = searchLine.getCoordinate();
                 //System.out.println("initLogicMain searchGorizontal " + ret);
