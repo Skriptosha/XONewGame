@@ -1,14 +1,21 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.util.Objects;
 
 class PaintGUI extends Paint {
 
+    /**
+     * Класс specialClassPaint для Java Swing интерфейса. Меняет кнопки через ссылку GuiInterface guiInterface
+     *
+     * @param matrix        Игровая матрица
+     * @param number        Число на игровой матрице
+     * @param WhoWalksFirst Строка, чей ход был первым
+     * @param course        Текущий ход
+     * @param gamer         Строка, имя игрока
+     * @param guiInterface  Если используется GUI интерфейс, ссылка на его экземпляр, в случае консоли должен быть null
+     * @return Возвращает, успешно ли совершен ход, или нет
+     */
     @Override
-    boolean specialClassPaint(String[][] matrix, String number, String WhoWalksFirst, int course, String gamer, GuiInterface guiInterface) {
+    boolean specialClassPaint(String[][] matrix, String number, String WhoWalksFirst, int course, String gamer,
+                              GuiInterface guiInterface) {
         boolean ret = false;
         SearchMatrix sm_player = new SearchMatrix();
         //System.out.println("painting_gui " + number);
@@ -31,24 +38,22 @@ class PaintGUI extends Paint {
         return ret;
     }
 
-     private void ChangeBotton(String number, String WhoWalksFirst, GuiInterface guiInterface, int course) {
-        File file_x = new File("C:\\Users\\manapov-ay\\Desktop\\Крестики-Нолики\\krestic_11_150.jpg");
-        File file_o = new File("C:\\Users\\manapov-ay\\Desktop\\Крестики-Нолики\\nolic_11_150.jpg");
-        Image image = null;
-        try {
-         image = ImageIO.read(file_o);
+    /**
+     * @param number        Число на игровой матрице
+     * @param WhoWalksFirst Строка, чей ход был первым
+     * @param guiInterface  Ссылка на GUI интерфейс
+     * @param course        Текущий ход
+     */
+    private void ChangeBotton(String number, String WhoWalksFirst, GuiInterface guiInterface, int course) {
 
-         if (WhoWalksFirst.equals("player") && course % 2 == 0) image = ImageIO.read(file_x);
-         if (WhoWalksFirst.equals("ai") && course % 2 != 0) image = ImageIO.read(file_x);
+        ImageIcon image_x = new ImageIcon("C:\\Users\\manapov-ay\\Desktop\\Крестики-Нолики\\krestic_11_150.jpg");
+        ImageIcon image_o = new ImageIcon("C:\\Users\\manapov-ay\\Desktop\\Крестики-Нолики\\nolic_11_150.jpg");
 
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Icon icon = new ImageIcon(Objects.requireNonNull(image));
+        Icon icon = image_o;
+        if (WhoWalksFirst.equals("player") && course % 2 == 0) icon = image_x;
+        if (WhoWalksFirst.equals("ai") && course % 2 != 0) icon = image_x;
 
         guiInterface.getButton(number).setIcon(icon);
         guiInterface.getButton(number).addActionListener(guiInterface.new WrongPush());
     }
 }
-

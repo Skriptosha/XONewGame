@@ -6,21 +6,34 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
 
 @SuppressWarnings("deprecation")
 public class GuiInterface extends JFrame {
     private JButton[] buttons;
     private JLabel jLabel;
+    private JLabel jLabelgif;
     private String selectedNumber;
     private int FieldSize;
-    private String Namegamer;
+    private String gamer;
     private ArrayList<Thread> threads = new ArrayList<Thread>();
+    private Image imagemain;
+    private Icon iconmain;
 
+    /**
+     * При выходе из ожидания, необходимо получить число в игровой матрице, куда тыкнул игрок.
+     *
+     * @return Число на игровой матрице
+     */
     public String returnNumber() {
         return selectedNumber;
     }
 
+    /**
+     * Управление "кнопкой" из других классов
+     *
+     * @param ActionCommand Число на игровой матрице, которое необходимо изменить
+     * @return Возвращает кнопку
+     */
     public JButton getButton(String ActionCommand) {
         JButton ret = null;
         for (int i = 1; i < (int) (Math.pow(FieldSize, 2) + 1); i++) {
@@ -33,74 +46,120 @@ public class GuiInterface extends JFrame {
         this.buttons[Integer.getInteger(ActionCommand)] = button;
     }
 
-    public void setNameGamer(String Namegamer) {
-        this.Namegamer = Namegamer;
+    /**
+     * Установка имени игрока при запуске GameSetting()
+     *
+     * @param gamer Строка, имя игрока
+     */
+    void setNameGamer(String gamer) {
+        this.gamer = gamer;
     }
 
+    /**
+     * Установка анимации при завершении игры.
+     */
+    private void setGIFAnimation() {
+        ImageIcon imageIcon = new ImageIcon("C:\\Users\\manapov-ay\\Desktop\\Крестики-Нолики\\GameOv1cropped.gif");
+        jLabelgif = new JLabel(imageIcon);
+        jLabelgif.setOpaque(true);
+        jLabelgif.setBackground(Color.darkGray);
 
-    public void setjLabelText(String jLabelText) {
+    }
+
+    /**
+     * Включить анимацию
+     */
+    void onGIFAnimation() {
+        getContentPane().add(jLabelgif, BorderLayout.CENTER);
+        jLabelgif.repaint();
+    }
+
+    /**
+     * Выключить анимацию
+     */
+    void offGIFAnimation() {
+        getContentPane().remove(jLabelgif);
+    }
+
+    /**
+     * Установка текста информационного сообщения внизу окна
+     *
+     * @param jLabelText Строка, текст который необходимо установить
+     */
+    void setjLabelText(String jLabelText) {
         this.jLabel.setText(jLabelText);
     }
 
+    /**
+     * Констуктор
+     *
+     * @param FieldSize    Размер поля
+     * @param gameSwingGUI ссылка на экземпляр класса GameSwingGUI
+     */
     GuiInterface(int FieldSize, GameSwingGUI gameSwingGUI) {
         super("Крестики-нолики");
+        try {
+            imagemain = ImageIO.read(new File("C:\\Users\\manapov-ay\\Desktop\\Крестики-Нолики\\unnamed.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        iconmain = new ImageIcon("C:\\Users\\manapov-ay\\Desktop\\Крестики-Нолики\\unnamedsmall.png");
         threads.add(Thread.currentThread());
         setupGUI(FieldSize, gameSwingGUI);
+        setGIFAnimation();
     }
 
+    /**
+     * Выйти из игры
+     */
     void closeFrame() {
         Object[] options = {"Да", "Нет!"};
         int rc = JOptionPane.showOptionDialog(
-                getContentPane(), "Закрыть окно?",
-                "Подтверждение", JOptionPane.YES_NO_OPTION,
+                getContentPane(), "Выйти из игры?",
+                "Крестики-нолики", JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
-                null, options, options[0]);
+                iconmain, options, options[0]);
         if (rc == 0) {
             getContentPane().setVisible(false);
             System.exit(0);
         }
-
     }
 
+    /**
+     * Меню окна, содержит кнопки Свернуть, Начать заново, Выход
+     *
+     * @return возвращает созданный обьект JMenu
+     */
     private JMenu MainMenu() {
 
         JMenu file = new JMenu("Файл");
         JMenuItem minimize = new JMenuItem("Свернуть");
         JMenuItem repeat = new JMenuItem("Начать заново");
         JMenuItem exit = new JMenuItem("Выход");
+
         file.setForeground(Color.WHITE);
         file.setBackground(Color.darkGray);
-        //exit.setIcon(new ImageIcon("images/exit.png"));
 
         file.add(minimize);
         file.add(repeat);
         file.addSeparator();
         file.add(exit);
-        file.setMnemonic('F');
-        //file.setAccelerator(KeyStroke.getKeyStroke('F', KeyEvent.CTRL_DOWN_MASK));
-        minimize.addActionListener(e -> {
-            //JOptionPane.showMessageDialog(getContentPane(), "Свернуть!", "Главное Меню", JOptionPane.DEFAULT_OPTION);
-            setState(JFrame.ICONIFIED);
 
+        minimize.addActionListener(e -> {
+            setState(JFrame.ICONIFIED);
         });
-        minimize.setMnemonic('M');
+
         minimize.setAccelerator(KeyStroke.getKeyStroke('M', KeyEvent.CTRL_DOWN_MASK));
         repeat.addActionListener(e -> {
             Object[] options = {"Да", "Нет!"};
+
             int rc = JOptionPane.showOptionDialog(
                     getContentPane(), "Вы действительно хотите начать игру заново?",
                     "Подтверждение", JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE,
-                    null, options, options[0]);
+                    JOptionPane.QUESTION_MESSAGE, iconmain, options, options[0]);
             if (rc == 0) {
-                File file_e = new File("C:\\Users\\manapov-ay\\Desktop\\Крестики-Нолики\\empty_11_150.jpg");
-                Image image = null;
-                try {
-                    image = ImageIO.read(file_e);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                Icon icon = new ImageIcon(Objects.requireNonNull(image));
+                offGIFAnimation();
+                Icon icon = new ImageIcon("C:\\Users\\manapov-ay\\Desktop\\Крестики-Нолики\\empty_11_150.jpg");
 
                 for (int i = 1; i < (int) (Math.pow(FieldSize, 2) + 1); i++) {
                     buttons[i].setEnabled(true);
@@ -109,36 +168,31 @@ public class GuiInterface extends JFrame {
                         buttons[i].removeActionListener(al);
                     }
                     buttons[i].addActionListener(new Push());
-
                 }
-
 
                 selectedNumber = "-1";
 
                 if (threads.size() > 0) threads.get(threads.size() - 1).interrupt();
                 System.out.println("Начало новой игры");
-                //System.out.println("GUI " + Thread.currentThread().getName() + " " + Thread.currentThread().getId());
-                //gameSwingGUI.GameMain(gameSwingGUI.randwhoWalksFirst());
-                GameSwingGUI gameSwingGUI = new GameSwingGUI(this, this.FieldSize, this.Namegamer);
+                GameSwingGUI gameSwingGUI = new GameSwingGUI(this, this.FieldSize, this.gamer);
                 threads.add(new Thread(gameSwingGUI));
                 threads.get(threads.size() - 1).start();
 
                 for (Thread thread1 : threads) {
                     System.out.println(thread1.getName() + " " + thread1.getState());
                 }
-
             }
-
         });
-        repeat.setMnemonic('R');
-        repeat.setAccelerator(KeyStroke.getKeyStroke('R', KeyEvent.CTRL_DOWN_MASK));
 
+        repeat.setAccelerator(KeyStroke.getKeyStroke('R', KeyEvent.CTRL_DOWN_MASK));
         exit.addActionListener(e -> closeFrame());
-        exit.setMnemonic('E');
         exit.setAccelerator(KeyStroke.getKeyStroke('E', KeyEvent.CTRL_DOWN_MASK));
         return file;
     }
 
+    /**
+     * Слушатель, вешается на кнопки поля. Пробуждает остановленный основной поток в классе CoursemainGui.
+     */
     class Push implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             selectedNumber = e.getActionCommand();
@@ -148,17 +202,25 @@ public class GuiInterface extends JFrame {
         }
     }
 
+    /**
+     * Если кнопка уже прожата была, вешается данный слушатель. Показывает предупреждающее сообщение, и так же
+     * пробуждает поток класса CoursemainGui
+     */
     class WrongPush implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            JOptionPane.showMessageDialog(getContentPane(), "Данное поле уже отмечано! Необходимо выбрать другое пустое поле, для совершения хода!", "Ошибка хода", JOptionPane.DEFAULT_OPTION);
+            JOptionPane.showMessageDialog(getContentPane(), "Данное поле уже отмечано!" +
+                            " Необходимо выбрать другое пустое поле, для совершения хода!",
+                    "Ошибка хода", JOptionPane.PLAIN_MESSAGE, iconmain);
             synchronized (CoursemainGui.monitorCoursemainGUI) {
                 CoursemainGui.monitorCoursemainGUI.notify();
             }
         }
     }
 
+    /**
+     * Верхний фон (картинка)
+     */
     class ImagePanel extends JPanel {
-
         private BufferedImage image;
 
         ImagePanel() {
@@ -174,25 +236,30 @@ public class GuiInterface extends JFrame {
             super.paintComponent(g);
             g.drawImage(image, 0, 0, null);
         }
-
     }
 
+    /**
+     * Отрисовка самого окна, запускается через конструктор класса
+     *
+     * @param FieldSize    Размер поля
+     * @param gameSwingGUI ссылка на экземпляр класса GameSwingGUI
+     */
     private void setupGUI(int FieldSize, GameSwingGUI gameSwingGUI) {
-        JFrame.setDefaultLookAndFeelDecorated(true);
         new JLayeredPane();
         setAlwaysOnTop(true);
+        setIconImage(imagemain);
         this.FieldSize = FieldSize;
-        setSize(FieldSize * 150 + 10, FieldSize * 150 + 215);
-        //System.out.println("width " + getWidth() + "; height " + getHeight());
+        setSize(FieldSize * 150 + 30, FieldSize * 150 + 70);
         setLocationRelativeTo(null);
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        setBackground(Color.darkGray);
 
         JMenuBar jMenuBar = new JMenuBar();
         jMenuBar.add(MainMenu());
         setJMenuBar(jMenuBar);
         jMenuBar.setBackground(Color.darkGray);
-        //jMenuBar.setForeground(Color.WHITE);
+        jMenuBar.setOpaque(true);
 
         super.addWindowListener(new WindowListener() {
             @Override
@@ -224,39 +291,25 @@ public class GuiInterface extends JFrame {
             public void windowDeactivated(WindowEvent e) {
             }
         });
-
-        JPanel bPanel = new JPanel(new BorderLayout());
-        //getContentPane().add(bPanel);
-        //bPanel.
-        bPanel.setBackground(Color.darkGray);
-
-        Dimension dimension_image = new Dimension(150 * FieldSize + 10, 99);
-        ImagePanel imagePanel = new ImagePanel();
-        imagePanel.setPreferredSize(dimension_image);
-        imagePanel.setMinimumSize(dimension_image);
-        imagePanel.setMaximumSize(dimension_image);
-        getContentPane().add(imagePanel, BorderLayout.NORTH);
+//        Dimension dimension_image = new Dimension(150 * FieldSize + 10, 99);
+//        ImagePanel imagePanel = new ImagePanel();
+//        imagePanel.setPreferredSize(dimension_image);
+//        imagePanel.setMinimumSize(dimension_image);
+//        imagePanel.setMaximumSize(dimension_image);
+//        getContentPane().add(imagePanel, BorderLayout.NORTH);
 
         JPanel gPanel = new JPanel(new GridLayout(FieldSize, FieldSize, 6, 6));
-        Dimension dimension_main = new Dimension(150 * FieldSize + 10, 150 * FieldSize + 10);
+        Dimension dimension_main = new Dimension(150 * FieldSize, 150 * FieldSize);
         gPanel.setPreferredSize(dimension_main);
         gPanel.setMaximumSize(dimension_main);
         gPanel.setMinimumSize(dimension_main);
-
 
         buttons = new JButton[(int) (Math.pow(FieldSize, 2) + 1)];
 
         for (int i = 1; i < (int) (Math.pow(FieldSize, 2) + 1); i++) {
             buttons[i] = new JButton();
             buttons[i].setActionCommand(String.valueOf(i));
-            File file_e = new File("C:\\Users\\manapov-ay\\Desktop\\Крестики-Нолики\\empty_11_150.jpg");
-            Image image = null;
-            try {
-                image = ImageIO.read(file_e);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Icon icon = new ImageIcon(image);
+            Icon icon = new ImageIcon("C:\\Users\\manapov-ay\\Desktop\\Крестики-Нолики\\empty_11_150.jpg");
             buttons[i].setIcon(icon);
             buttons[i].addActionListener(new Push());
             gPanel.add(buttons[i]);
@@ -267,31 +320,20 @@ public class GuiInterface extends JFrame {
         jLabel = new JLabel();
         JPanel sPanel = new JPanel();
         sPanel.add(jLabel);
-        jLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
+        jLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
         jLabel.setBackground(Color.darkGray);
         jLabel.setForeground(Color.WHITE);
-        Dimension dimension_label = new Dimension(150 * FieldSize + 10, 27);
+        Dimension dimension_label = new Dimension(150 * FieldSize + 30, 27);
         sPanel.setPreferredSize(dimension_label);
         sPanel.setMinimumSize(dimension_label);
         sPanel.setMaximumSize(dimension_label);
         getContentPane().add(sPanel, BorderLayout.SOUTH);
-
         //gPanel.setLayout(grid);
         sPanel.setBackground(Color.darkGray);
         gPanel.setBackground(Color.darkGray);
-
         //getContentPane().add(bPanel);
         //add(bPanel);
+        //setOpacity(0.55f);
         setVisible(true);
     }
 }
-
-
-
-
-
-
-
-
-
-

@@ -1,6 +1,6 @@
 import java.util.Random;
 
-public class RandomCoal {
+class RandomCoal {
     //public String[] ai_1;
     private SearchMatrix sm_ai = new SearchMatrix();
     private Random r = new Random();
@@ -10,7 +10,7 @@ public class RandomCoal {
     private String value_4 = "";
     private int bound = 0;
 
-    public String rand_coal(String[][] matrix) {
+    String rand_coal(String[][] matrix) {
         int c = matrix.length;
         String[] ai_1 = new String[]{matrix[0][0], matrix[0][c - 1], matrix[c - 1][0], matrix[c - 1][c - 1]};
         String ret = "";
@@ -27,22 +27,21 @@ public class RandomCoal {
         if (!value_3.equals("")) bound++;
         if (!value_4.equals("")) bound++;
         if (bound > 0) {
-        int bound_c = r.nextInt(bound) + 1;
-        switch (bound_c)
-        {
-            case 1:
-                ret = value_1;
-                break;
-            case 2:
-                ret = value_2;
-                break;
-            case 3:
-                ret = value_3;
-                break;
-            case 4:
-                ret = value_4;
-                break;
-        }
+            int bound_c = r.nextInt(bound) + 1;
+            switch (bound_c) {
+                case 1:
+                    ret = value_1;
+                    break;
+                case 2:
+                    ret = value_2;
+                    break;
+                case 3:
+                    ret = value_3;
+                    break;
+                case 4:
+                    ret = value_4;
+                    break;
+            }
         }
         //System.out.println("rand_coal ret" + ret);
         return ret;

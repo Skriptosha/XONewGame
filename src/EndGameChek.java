@@ -3,8 +3,16 @@ public class EndGameChek {
     private int winner = 0;
     private SearchLine searchLine = new SearchLine();
 
-    public boolean end(String[][] matrix, int WinCombination)
-    {
+    /**
+     * Метод проверки окончания игры.
+     * 1 - Игрок
+     * 10 - ПК
+     *
+     * @param matrix         Игровая матрица
+     * @param WinCombination Колличество Х или О на одной линии для выигрышной комбинации
+     * @return Возвращает false если игра закончена (ничья или кто то выиграл).
+     */
+    public boolean end(String[][] matrix, int WinCombination) {
         int count = 0;
         int c = matrix.length;
         for (int i = 0; i < c; i++) {

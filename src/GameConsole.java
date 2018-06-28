@@ -15,9 +15,12 @@ public class GameConsole {
         }
     };
 
-
-     private void setMatrix(int fieldSize){
-
+    /**
+     * Инициализация игровой матрицы
+     *
+     * @param fieldSize Размер поля
+     */
+    private void setMatrix(int fieldSize) {
         matrix_1 = new String[fieldSize][fieldSize];
         this.fieldSize = fieldSize;
         int stack = 1;
@@ -30,6 +33,10 @@ public class GameConsole {
         }
     }
 
+    /**
+     * Установка Имени игрока, размера игрового поля, жеребьевка кто будет ходить первым, Инициализация CompLogic
+     * запуск GameMain.
+     */
     public void GameSetting() {
         System.out.println("Пожалуйста введите имя игрока!");
         String scan;
@@ -58,9 +65,13 @@ public class GameConsole {
         System.out.println();
         CompLogic.setInitializationCount(0);
         GameMain(whoWalksFirst);
-
     }
 
+    /**
+     * Запуск ходов, метод в котором вызываются методы хода игрока и хода ПК + проверка не закончилась ли игра.
+     *
+     * @param whoWalksFirst Строка, чей ход был первым
+     */
     void GameMain(String whoWalksFirst) {
         int course = 0;
         WinCombination = fieldSize;

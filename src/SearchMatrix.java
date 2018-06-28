@@ -2,7 +2,15 @@ public class SearchMatrix {
     private int i = 0;
     private int j = 0;
 
-    public boolean search(String[][] mtrx, String number) {
+    /**
+     * Поиск числа в игровой матрице, так позволяет получить координаты найденного числа
+     * getI() и getJ()ж
+     *
+     * @param mtrx   Игровая матрица
+     * @param number Число, которое необходимо найти
+     * @return Возвращает Булево значение, нашел или нет.
+     */
+    boolean search(String[][] mtrx, String number) {
         boolean find = false;
         int c = mtrx.length;
         for (int a = 0; a < c; a++) {
@@ -14,7 +22,7 @@ public class SearchMatrix {
                 }
             }
         }
-       return find;
+        return find;
     }
 
     public int getI() {

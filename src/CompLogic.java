@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
+
 @SuppressWarnings("deprecation")
 public abstract class CompLogic implements Runnable {
     private static int initializationCount;
@@ -12,9 +12,6 @@ public abstract class CompLogic implements Runnable {
     static ArrayList<String> ai_pair1;
     static ArrayList<String> ai_pair2;
     static ArrayList<Integer> ai_pair3;
-
-
-    Random random = new Random();
     RandomCoal cl = new RandomCoal();
     SearchLine searchLine = new SearchLine();
 
@@ -22,9 +19,16 @@ public abstract class CompLogic implements Runnable {
         CompLogic.initializationCount = initializationCount;
     }
 
+    /**
+     * Создает копию игровой матрицы и необходимые массивы для работы, обязательна для игры против ПК
+     *
+     * @param matrix    Игровая матрица
+     * @param fieldsize Размер игрового поля
+     * @return возвращает всегда тру
+     */
     public boolean initializationCompLogic(String[][] matrix, int fieldsize) {
         initializationCount++;
-        Integer[] cd = {0, matrix.length-1};
+        Integer[] cd = {0, matrix.length - 1};
         CompLogic.matrix_temp = Arrays.copyOf(matrix, matrix.length);
         int c = fieldsize;
         String[] a = new String[]{CompLogic.matrix_temp[0][0], CompLogic.matrix_temp[c - 1][c - 1]};
@@ -37,13 +41,18 @@ public abstract class CompLogic implements Runnable {
         return true;
     }
 
-
     @Override
     public void run() {
-
     }
 
-
+    /**
+     * Работает начиная с 3 хода. Основная логика.
+     *
+     * @param matrix         Игровая матрица
+     * @param course         текущий ход
+     * @param WinCombination Колличество Х или О на одной линии для выигрышной комбинации
+     * @return возвращает Число на игровой матрице, куда сходить.
+     */
     public String initLogicMain(String[][] matrix, int course, int WinCombination) {
 
         if (initializationCount != 1) {
@@ -116,7 +125,6 @@ public abstract class CompLogic implements Runnable {
                 if (ret.equals("") && searchLine.searchDiagonalRight(matrix, "O", WinCombination) >= 1 && !searchLine.getCoordinate().equals("")) {
                     ret = searchLine.getCoordinate();
                 }
-
                 //System.out.println("O > 1 " + ret);
 //                for (int i = 1; i < (int) (Math.pow(Main.fieldSize, 2) + 1); i++) {
 //                if (sm_ai.search(Paint.getMatrix_1(), String.valueOf(i))) ret = String.valueOf(i);
@@ -137,13 +145,24 @@ public abstract class CompLogic implements Runnable {
         return matrix_temp;
     }
 
+    /**
+     * Счетчик initializationCompLogic
+     *
+     * @return возвращает колличество вызовов метода  initializationCompLogic
+     */
     public static int getInitializationCount() {
         return initializationCount;
     }
-
     //System.out.println("ret " + ret);
 
-
+    /**
+     * Дополнительная логика для шагов ПК
+     *
+     * @param matrix         Игровая матрица
+     * @param course         Текущий ход
+     * @param WinCombination Колличество Х или О на одной линии для выигрышной комбинации
+     * @return возвращает Число на игровой матрице, куда сходить.
+     */
     abstract String initLogic(String[][] matrix, int course, int WinCombination);
 }
 

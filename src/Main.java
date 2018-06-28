@@ -1,6 +1,10 @@
 
 public class Main {
-
+    /**
+     * Запуск игры. На выбор два режима (через консоль): Консоль и GUI.
+     *
+     * @param args
+     */
     public static void main(String[] args) {
 
         System.out.println("Вы хотите начать игру? Y/N");
@@ -13,7 +17,7 @@ public class Main {
             s = sc.scan();
         }
 
-        if (s.equals("N")) {
+        if (s.equalsIgnoreCase("N")) {
             System.exit(0);
         }
 
@@ -24,7 +28,9 @@ public class Main {
             System.out.println("Необходимо нажать клавишу K - если Консоль и G - если Графический интерфейс!");
             s = sc.scan();
         }
+
         Thread.currentThread().setName("MainGame");
+
         if (s.equalsIgnoreCase("K")) {
             new GameConsole().GameSetting();
         } else {
